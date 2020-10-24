@@ -12,17 +12,20 @@ func main() {
 
 	deposit := func(amount int) {
 		mu.Lock()
+		defer mu.Unlock()
+
 		balance += amount
-		mu.Unlock()
 	}
 
-	withdraw := func (amount int) {
+	withdraw := func(amount int) {
 		mu.Lock()
+		defer mu.Unlock()
+
 		balance -= amount
-		mu.Unlock()
 	}
 
 	wg.Add(100)
+
 	for i := 0; i < 100; i++ {
 		go func() {
 			defer wg.Done()
@@ -31,6 +34,7 @@ func main() {
 	}
 
 	wg.Add(100)
+
 	for i := 0; i < 100; i++ {
 		go func() {
 			defer wg.Done()
